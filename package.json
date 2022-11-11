@@ -5,8 +5,8 @@
   "main": "db.js",
   "scripts": {
     "test": "jest --verbose --runInBand --watchAll --coverage",
-    "test:routes:show": "jest test/routes.tests/show --verbose --runInBand --watchAll --coverage",
-    "test:routes:user": "jest test/routes.tests/user --verbose --runInBand --watchAll --coverage",
+    "test:routes:show": "jest tests/routes.tests/show.test.js --verbose --runInBand --watchAll --coverage",
+    "test:routes:user": "jest tests/routes.tests/user.test.js --verbose --runInBand --watchAll --coverage",
     "start": "nodemon server.js"
   },
   "author": "",
