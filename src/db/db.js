@@ -1,14 +1,15 @@
 // imports
-const { Sequelize, DataTypes } = require('sequelize')
+const { Sequelize, DataTypes } = require('sequelize');
+const path = require('path');
 
 //create an instance of the database call it db
 const db = new Sequelize('database', 'username', 'password', {
     dialect: 'sqlite',
-    storage: './movie_watchlist.sqlite',
+    storage: path.join(__dirname, 'movie_watchlist.sqlite'),
     logging: false
-})
+});
 
 
 
 //export
-module.exports = { db, DataTypes }
+module.exports = { db, DataTypes };
