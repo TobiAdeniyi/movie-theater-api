@@ -1,36 +1,11 @@
 const request = require('supertest');
 const server = require('../../src/server');
 const { User, Show } = require('../../src/models/index');
-const { db } = require('../../src/db/db');
+const { statusCodes } = require('../../src/utils/utils');
+const { userDetails, showDetails } = require('../../src/utils/demoData');
 
-const statusCodes = {
-  ok: 200,
-  created: 201,
-  badRequest: 400,
-  notFound: 404,
-};
 
-describe('Server methods on User routs', () => {
-
-  const userDetails = {
-    username: 'TomScott',
-    password: 'password'
-  };
-
-  const showDetails = [
-    {
-      title: 'two and a half men',
-      genre: 'Comedy',
-      rating: 7,
-      status: 'watching'
-    },
-    {
-      title: 'doctor who',
-      genre: 'Drama',
-      rating: 10,
-      status: 'finished'
-    }
-  ];
+describe('Server methods on User routes', () => {
 
   describe('GET /users', () => {
     let res; // response from GET on /users
@@ -52,7 +27,7 @@ describe('Server methods on User routs', () => {
     test('responds with an array of users', () => {
       expect(Array.isArray(res.body)).toBeTruthy(); // body is an array
       expect(res.body.map(({ username, password }) => {
-        return { username, password }
+        return { username, password };
       })).toEqual([userDetails]); // body contains the correct values
     });
   });
@@ -68,15 +43,15 @@ describe('Server methods on User routs', () => {
           .send(userDetails);
       });
 
-      test('succeeds', async () => {
+      test('succeeds', () => {
         expect(res.statusCode).toBe(statusCodes['ok']);
       });
 
-      test('responds formatted as application/json', async () => {
+      test('responds formatted as application/json', () => {
         expect(res.headers['content-type']).toMatch('application/json');
       });
 
-      test('responds with the correct user', async () => {
+      test('responds with the correct user', () => {
         expect(res.body).toBeTruthy(); // body is not empty
         const { username, password } = res.body;
         expect({ username, password }).toEqual(userDetails);

@@ -1,22 +1,17 @@
 const { Router } = require('express');
 const { User } = require("../models");
 const { body, validationResult } = require('express-validator');
+const { statusCodes } = require('../utils/utils');
 
 // create router
 const userRouter = Router();
-const statusCodes = {
-  ok: 200,
-  created: 201,
-  badRequest: 400,
-  notFound: 404,
-};
 
 // Define midwears
 const getUserIfUserExistsElseThrowNotFound = async (req, res, next) => {
   let condition = {
     ...(req.body.id && { id: req.body.id }),
-    ...(req.body.username && { username: req.body.username }),
-    ...(req.body.password && { password: req.body.password })
+    ...(req.body.username && req.body.password && { username: req.body.username }),
+    ...(req.body.username && req.body.password && { password: req.body.password }),
   };
 
   const user = condition && await User.findOne(
@@ -85,14 +80,18 @@ userRouter.get('/', async (_, res) => {
  */
 userRouter.get(
   '/user',
-  body().not().isEmpty(),
-  body('username').exists(),
-  body('password').exists(),
-  body('username').isAlphanumeric(),
-  body('password').isAlphanumeric(),
+  body()
+    .not()
+    .isEmpty(),
+  body('username')
+    .exists()
+    .isAlphanumeric(),
+  body('password')
+    .exists()
+    .isAlphanumeric(),
   getUserIfUserExistsElseThrowNotFound,
   userValidator,
-  async (req, res) => {
+  (req, res) => {
     res
       .status(statusCodes['ok'])
       .send(req.user);
@@ -116,7 +115,7 @@ userRouter.get(
   getUserIfUserExistsElseThrowNotFound,
   getShowsIfShowsExistsElseThrowNotFound,
   userValidator,
-  async (req, res) => {
+  (req, res) => {
     console.log(req.body);
     res
       .status(statusCodes['ok'])
@@ -157,7 +156,7 @@ userRouter.put(
   getShowsIfShowsExistsElseThrowNotFound,
   updateShowIfShowExistElseCreateShow,
   userValidator,
-  async (req, res) => {
+  (_, res) => {
     res.sendStatus(statusCodes['created']);
   }
 )
